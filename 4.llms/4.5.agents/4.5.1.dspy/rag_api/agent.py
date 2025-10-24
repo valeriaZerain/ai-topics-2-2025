@@ -34,10 +34,10 @@ def get_artist_documents(filename: str) -> list[Document]:
 
 ARTIST_FILES = [
     "8988_Kjarkas.txt",
-    "8989_SaviaAndina.txt",
-    "8990_GrupoMarka.txt",
-    "8991_RicoRico.txt",
-    "8992_SayaAfroBoliviana.txt",
+    "37055_SaviaAndina.txt",
+    "9300_Mana.txt",
+    "16643_AngelesAzules.txt",
+    "23997_Calamarka.txt",
 ]
 
 if not os.path.exists(PERSIST_DIR):
