@@ -32,25 +32,31 @@ def get_artist_documents(filename: str) -> list[Document]:
     ]    
     return documents
 
+ARTIST_FILES = [
+    "8988_Kjarkas.txt",
+    "8989_SaviaAndina.txt",
+    "8990_GrupoMarka.txt",
+    "8991_RicoRico.txt",
+    "8992_SayaAfroBoliviana.txt",
+]
 
 if not os.path.exists(PERSIST_DIR):
-    documents = get_artist_documents("8988_Kjarkas.txt")
-    index = VectorStoreIndex.from_documents(documents, show_progress=True)
+    all_documents = []
+    
+    for filename in ARTIST_FILES:
+        docs = get_artist_documents(filename)
+        all_documents.extend(docs)
+    
+    index = VectorStoreIndex.from_documents(all_documents, show_progress=True)
     index.storage_context.persist(persist_dir=PERSIST_DIR)
+
 else:
-    storage_context = StorageContext.from_defaults(persist_dir=PERSIST_DIR) 
+    storage_context = StorageContext.from_defaults(persist_dir=PERSIST_DIR)
     index = load_index_from_storage(storage_context)
-retriever = index.as_retriever()
-
-
+    retriever = index.as_retriever()
 
 def get_artist_wikipedia_info(artist: str) -> str:
-    """
-        Useful for getting artist information from wikipedia
-        Use plain text as input to the tool, this should be the name of an artist or a band.
-        The output of this tool is the summary of the wikipedia page corresponding to the artist.
-    """
-    wiki = wikipediaapi.Wikipedia("Test Wikipedia (eduardo.laruta@gmail.com)", "es")
+    wiki = wikipediaapi.Wikipedia("Test Wikipedia", "es")
     page = wiki.page(artist)
     if not page.exists():
         return f"Wikipedia page for {artist} does not exist"
@@ -58,11 +64,6 @@ def get_artist_wikipedia_info(artist: str) -> str:
 
 
 def get_artist_relevant_song_lyrics(topic: str) -> list[str]:
-    """
-        Useful for getting song lyrics of Los Kjarkas. Use this tool for getting full text of
-        song lyrics based on a topic.
-        The output of this tool is a list of song lyrics.
-    """
     nodes = retriever.retrieve(topic)
     return [node.text for node in nodes]
 

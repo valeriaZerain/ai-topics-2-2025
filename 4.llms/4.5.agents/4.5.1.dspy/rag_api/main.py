@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from typing import Any
 from agent import RAG
 
-app = FastAPI(title="Los Kjarkas AI Agent")
+app = FastAPI(title="Artistas AI Agent")
 
 rag = RAG()
 
